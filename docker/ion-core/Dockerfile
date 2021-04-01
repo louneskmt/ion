@@ -18,6 +18,12 @@ RUN adduser --no-create-home --shell /bin/bash --disabled-login --gecos "$USER u
 
 COPY --from=builder --chown=$USER:$USER /ion /ion
 
+COPY ./docker/ion-core/wait-for /wait-for
+
+RUN chown $USER:$USER /wait-for && \
+    chmod u+x /wait-for && \
+    chmod g+x /wait-for
+
 USER $USER
 
 WORKDIR /ion
