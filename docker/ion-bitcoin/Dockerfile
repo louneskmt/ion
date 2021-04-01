@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
+RUN npm run build
+
 FROM node:14.16.0-buster-slim as final
 
 ARG USER=ion
@@ -16,12 +18,8 @@ RUN adduser --no-create-home --shell /bin/bash --disabled-login --gecos "$USER u
 
 COPY --from=builder --chown=$USER:$USER /ion /ion
 
-COPY ./docker/ion-bitcoin/entrypoint.sh /entrypoint.sh
-
-RUN chown $USER:$USER /entrypoint.sh && \
-    chmod u+x /entrypoint.sh && \
-    chmod g+x /entrypoint.sh
-
 USER $USER
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+WORKDIR /ion
+
+CMD [ "npm", "run", "bitcoin" ]
